@@ -36,10 +36,14 @@ class ViewController : UIViewController {
 	]
 	
 	override func viewDidLoad() {
-		let rows = cars.enumerate().map { i, c in Row("car\(i)", PlainRow(title: c.name, subtitle: String(c.year))) }
+		let carCell : ((Int, Car) -> Row) = { i, c in Row("car\(i)", PlainRow(title: c.name, subtitle: String(c.year))) }
 		
-		let section = Section("new_cars", header: "New cars", rows: rows)
+		let newCars = cars.filter { !$0.used }.enumerate().map(carCell)
+		let oldCars = cars.filter { $0.used }.enumerate().map(carCell)
 		
-		tableView.tablesDataSource.update([section])
+		let newSection = Section("new_cars", header: "New cars", rows: newCars)
+		let oldSection = Section("old_cars", header: "Used cars", rows: oldCars)
+		
+		tableView.tablesDataSource.update([newSection, oldSection])
 	}
 }
