@@ -9,6 +9,10 @@
 import UIKit
 import Tables
 
+struct PlainRow : CellType {
+	let title : String?
+}
+
 class ViewController : UIViewController {
 	override func loadView() {
 		view = TablesTableView(style: .Grouped)
@@ -19,7 +23,9 @@ class ViewController : UIViewController {
 	}
 	
 	override func viewDidLoad() {
-		let section = Section("new_cars", rows: [])
+		let carRow = Row("car", PlainRow(title: "Car"))
+		
+		let section = Section("new_cars", rows: [carRow])
 		
 		tableView.tablesDataSource.update([section])
 	}
