@@ -9,11 +9,12 @@
 import UIKit
 import Tables
 
-struct PlainRow : SubtitleCellType, DetailsCellType {
+struct PlainRow : SubtitleCellType, DetailsCellType, EditableCellType {
 	let title : String?
 	let subtitle : String?
 	
 	let action : Void -> Void
+	let deleteAction : Void -> Void
 }
 
 struct Car {
@@ -44,15 +45,19 @@ class ViewController : UIViewController {
 		navigationController?.pushViewController(vc, animated: true)
 	}
 	
+	func deleteCar(car : Car) {
+		cars = cars.filter { $0.name != car.name }
+	}
+	
 	override func viewDidLoad() {
 		tableView.tablesDataSource.update(generateSections())
 		
-		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: Selector("add:"))
+		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: Selector("add:"))
 	}
 	
 	func generateSections() -> [Section] {
 		let carCell : ((Int, Car) -> Row) = { i, c in
-			Row("car\(i)", PlainRow(title: c.name, subtitle: String(c.year), action: { [weak self] in self?.showCar(c) }))
+			Row("car\(i)", PlainRow(title: c.name, subtitle: String(c.year), action: { [weak self] in self?.showCar(c) }, deleteAction: { [weak self] in self?.deleteCar(c) }))
 		}
 		
 		let newCars = cars.filter { !$0.used }.enumerate().map(carCell)
