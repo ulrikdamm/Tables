@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>TablesTest.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -18,6 +23,11 @@
 			<true/>
 		</dict>
 		<key>FFDEDED71BEB78CD006BB28D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FFDEDEFB1BEB8345006BB28D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
