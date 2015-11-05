@@ -7,8 +7,18 @@
 //
 
 import UIKit
+import Tables
 
 class ViewController : UIViewController {
+	override func loadView() {
+		view = TablesTableView(style: .Grouped)
+	}
 	
+	var tableView : TablesTableView {
+		return view as! TablesTableView
+	}
+	
+	override func viewDidLoad() {
+		
+	}
 }
-
