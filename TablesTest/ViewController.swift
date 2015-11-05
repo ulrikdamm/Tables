@@ -23,9 +23,9 @@ class ViewController : UIViewController {
 	}
 	
 	override func viewDidLoad() {
-		let carRow = Row("car", PlainRow(title: "Car"))
+		let cars = [Row("car1", PlainRow(title: "Car 1")), Row("car2", PlainRow(title: "Car 2"))]
 		
-		let section = Section("new_cars", rows: [carRow])
+		let section = Section("new_cars", rows: cars)
 		
 		tableView.tablesDataSource.update([section])
 	}
