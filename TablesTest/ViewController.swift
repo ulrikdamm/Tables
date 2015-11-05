@@ -38,7 +38,7 @@ class ViewController : UIViewController {
 	override func viewDidLoad() {
 		let rows = cars.enumerate().map { i, c in Row("car\(i)", PlainRow(title: c.name, subtitle: String(c.year))) }
 		
-		let section = Section("new_cars", rows: rows)
+		let section = Section("new_cars", header: "New cars", rows: rows)
 		
 		tableView.tablesDataSource.update([section])
 	}
