@@ -9,8 +9,9 @@
 import UIKit
 import Tables
 
-struct PlainRow : CellType {
+struct PlainRow : SubtitleCellType {
 	let title : String?
+	let subtitle : String?
 }
 
 struct Car {
@@ -35,7 +36,7 @@ class ViewController : UIViewController {
 	]
 	
 	override func viewDidLoad() {
-		let rows = cars.enumerate().map { i, c in Row("car\(i)", PlainRow(title: c.name)) }
+		let rows = cars.enumerate().map { i, c in Row("car\(i)", PlainRow(title: c.name, subtitle: String(c.year))) }
 		
 		let section = Section("new_cars", rows: rows)
 		
