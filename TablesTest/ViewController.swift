@@ -19,6 +19,8 @@ class ViewController : UIViewController {
 	}
 	
 	override func viewDidLoad() {
+		let section = Section("new_cars", rows: [])
 		
+		tableView.tablesDataSource.update([section])
 	}
 }
