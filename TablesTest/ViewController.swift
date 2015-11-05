@@ -9,9 +9,11 @@
 import UIKit
 import Tables
 
-struct PlainRow : SubtitleCellType {
+struct PlainRow : SubtitleCellType, DetailsCellType {
 	let title : String?
 	let subtitle : String?
+	
+	let action : Void -> Void
 }
 
 struct Car {
@@ -35,8 +37,17 @@ class ViewController : UIViewController {
 		Car(name: "Boss' car", year: 2015, used: false),
 	]
 	
+	func showCar(car : Car) {
+		let vc = UIViewController()
+		vc.title = car.name
+		vc.view.backgroundColor = .whiteColor()
+		navigationController?.pushViewController(vc, animated: true)
+	}
+	
 	override func viewDidLoad() {
-		let carCell : ((Int, Car) -> Row) = { i, c in Row("car\(i)", PlainRow(title: c.name, subtitle: String(c.year))) }
+		let carCell : ((Int, Car) -> Row) = { i, c in
+			Row("car\(i)", PlainRow(title: c.name, subtitle: String(c.year), action: { [weak self] in self?.showCar(c) }))
+		}
 		
 		let newCars = cars.filter { !$0.used }.enumerate().map(carCell)
 		let oldCars = cars.filter { $0.used }.enumerate().map(carCell)
