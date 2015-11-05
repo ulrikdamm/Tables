@@ -53,6 +53,17 @@ class ViewController : UIViewController {
 		tableView.tablesDataSource.update(generateSections())
 		
 		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: Selector("add:"))
+		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: Selector("edit:"))
+	}
+	
+	func edit(sender : AnyObject?) {
+		tableView.setEditing(true, animated: true)
+		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: Selector("done:"))
+	}
+	
+	func done(sender : AnyObject?) {
+		tableView.setEditing(false, animated: true)
+		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: Selector("edit:"))
 	}
 	
 	func generateSections() -> [Section] {
