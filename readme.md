@@ -58,10 +58,10 @@ contentView.tablesDataSource.update(generateSections())
 
 And your tableview will be reloaded if needed.
 
-Tables also support things that are typically very annoying to do very simply. Like, to make a row deletable, just add EditableCellType to your cell type, and set the deleteAction. There’s examples of all this in the sample app.
+Tables also support things that are typically very annoying to do very simply. Like, to make a row deletable, just add `EditableCellType` to your cell type, and set the `deleteAction`. There’s examples of all this in the sample app.
 
 ## Cutomization
 
-Tables is very customizable. You can set the cellTypeForRow property on the tablesDataSource, and you can specify yourself which UITableViewCell subclasses you want for different cell types.
+Tables is very customizable. You can set the `cellTypeForRow` property on the `tablesDataSource`, and you can specify yourself which `UITableViewCell` subclasses you want for different cell types.
 
-You can also make your own cell types, just making a struct that implements CellType is all you need to do. You can also do custom cell types that uses built in functionality by implementing more protocols. For example, you can implement DetailsCellType (to make it pressable and add a disclosure indicator), EditableCellType (to make it deletable by left-swiping on the cell) and SpinnerCellType (to be able to show an activity indicator in the cell), and then extend it with your own data. Then for displaying this, you make a subclass of the TablesPlainCell, and register that cell for your cell type in cellTypeForRow.
+You can also make your own cell types, just making a struct that implements `CellType` is all you need to do. You can also do custom cell types that uses built in functionality by implementing more protocols. For example, you can implement `DetailsCellType` (to make it pressable and add a disclosure indicator), `EditableCellType` (to make it deletable by left-swiping on the cell) and `SpinnerCellType` (to be able to show an activity indicator in the cell), and then extend it with your own data. Then for displaying this, you make a subclass of the `TablesPlainCell`, and register that cell for your cell type in `cellTypeForRow`.
