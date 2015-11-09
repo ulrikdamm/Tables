@@ -31,6 +31,12 @@ public class TablesPlainCell : UITableViewCell, DeclarativeCell {
 			} else {
 				accessoryView = nil
 			}
+            
+            if let cellType = cellType as? ImageCellType {
+                imageView?.image = cellType.image
+            } else {
+                imageView?.image = nil
+            }
 		}
 	}
 }
