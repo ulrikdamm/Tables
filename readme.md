@@ -13,20 +13,20 @@ This is the code that generates the tableview cells:
 ```swift
 func generateSections() -> [Section] {
 	let nameRow = TextInputCell(
-		id: “name”,
-		title: “Name”,
-		placeholder: “Donald Duck”,
+		id: "name",
+		title: "Name",
+		placeholder: "Donald Duck",
 		enabled: !loading,
 		invalid: nameInvalid,
 		value: name,
 		valueChanged: { [weak self] in self?.name = $0 },
-		done: { [weak self] _ in self?.selectRow(“email”) }
+		done: { [weak self] _ in self?.selectRow("email") }
 	)
 	
 	let emailRow = TextInputCell(
-		id: “email”,
-		title: “Email”,
-		placeholder: “donald@duck.com”,
+		id: "email",
+		title: "Email",
+		placeholder: "donald@duck.com",
 		enabled: !loading,
 		invalid: emailInvalid,
 		value: email,
@@ -34,17 +34,17 @@ func generateSections() -> [Section] {
 		done: { [weak self] _ in self?.submit() }
 	)
 	
-	let inputSection = Section(“input”, header: “User formation”, rows: [nameRow, emailRow])
+	let inputSection = Section("input", header: "User formation", rows: [nameRow, emailRow])
 	
 	let submitRow = ButtonCell(
-		id: “submit”,
-		title: “Submit”,
+		id: "submit",
+		title: "Submit",
 		enabled: !loading,
 		loading: loading,
 		action: { [weak self] in self?.submit() }
 	)
 	
-	let submitSection = Section(“submit”, rows: [submitRow])
+	let submitSection = Section("submit", rows: [submitRow])
 	
 	return [inputSection, submitSection]
 }
