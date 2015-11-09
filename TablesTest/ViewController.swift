@@ -9,23 +9,15 @@
 import UIKit
 import Tables
 
-struct PlainRow : SubtitleCellType, DetailsCellType, EditableCellType {
-	let title : String?
-	let subtitle : String?
-	
-	let action : Void -> Void
-	let deleteAction : Void -> Void
-}
-
 struct Car {
-	let name : String
-	let year : Int
-	let used : Bool
+	var name : String
+	var year : Int
+	var used : Bool
 }
 
 class ViewController : UIViewController {
 	override func loadView() {
-		view = TablesTableView(style: .Grouped)
+		view = TablesTableView(style: .Plain)
 	}
 	
 	var tableView : TablesTableView {
@@ -66,18 +58,32 @@ class ViewController : UIViewController {
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: Selector("edit:"))
 	}
 	
+	func rowForCar(index : Int, car : Car) -> Row {
+		let cell = EditableDetailsSubtitleCell(
+			title: car.name,
+			subtitle: String(car.year),
+			action: { [weak self] in self?.showCar(car) },
+			deleteAction: { [weak self] in self?.deleteCar(car) }
+		)
+		
+		return Row("car\(index)", cell)
+	}
+	
 	func generateSections() -> [Section] {
-		let carCell : ((Int, Car) -> Row) = { i, c in
-			Row("car\(i)", PlainRow(title: c.name, subtitle: String(c.year), action: { [weak self] in self?.showCar(c) }, deleteAction: { [weak self] in self?.deleteCar(c) }))
+		let newCars = cars.filter { !$0.used }.enumerate().map(rowForCar)
+		let oldCars = cars.filter { $0.used }.enumerate().map(rowForCar)
+		
+		var sections : [Section] = []
+		
+		if newCars.count > 0 {
+			sections.append(Section("new_cars", header: "New cars", rows: newCars))
 		}
 		
-		let newCars = cars.filter { !$0.used }.enumerate().map(carCell)
-		let oldCars = cars.filter { $0.used }.enumerate().map(carCell)
+		if oldCars.count > 0 {
+			sections.append(Section("old_cars", header: "Used cars", rows: oldCars))
+		}
 		
-		let newSection = Section("new_cars", header: "New cars", rows: newCars)
-		let oldSection = Section("old_cars", header: "Used cars", rows: oldCars)
-		
-		return [newSection, oldSection]
+		return sections
 	}
 	
 	override func viewWillAppear(animated : Bool) {
@@ -87,6 +93,6 @@ class ViewController : UIViewController {
 	}
 	
 	func add(sender : AnyObject?) {
-		cars.append(Car(name: "Unnamed car #\(arc4random_uniform(1000))", year: 2000, used: false))
+		cars.append(Car(name: "Unnamed car #\(arc4random_uniform(1000))", year: 1980 + Int(arc4random_uniform(35)), used: arc4random_uniform(100) % 2 == 0))
 	}
 }

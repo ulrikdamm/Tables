@@ -16,17 +16,23 @@ public class DeclarableTableViewDelegate : NSObject, UITableViewDelegate {
 	}
 	
 	public func tableView(tableView : UITableView, shouldHighlightRowAtIndexPath indexPath : NSIndexPath) -> Bool {
-		return dataSource?.rowAtIndexPath(indexPath).type is PressableCellType ?? true
+		return dataSource?.rowAtIndexPath(indexPath)?.type is PressableCellType ?? true
 	}
 	
 	public func tableView(tableView : UITableView, didSelectRowAtIndexPath indexPath : NSIndexPath) {
-		if let row = dataSource?.rowAtIndexPath(indexPath).type as? PressableCellType {
+		if let row = dataSource?.rowAtIndexPath(indexPath)?.type as? PressableCellType {
 			row.action()
 		}
 	}
 	
+	public func tableView(tableView : UITableView, willDisplayCell cell : UITableViewCell, forRowAtIndexPath indexPath : NSIndexPath) {
+		if var dcell = cell as? DeclarativeCell {
+			dcell.cellType = dcell.cellType
+		}
+	}
+	
 	public func tableView(tableView : UITableView, targetIndexPathForMoveFromRowAtIndexPath sourceIndexPath : NSIndexPath, toProposedIndexPath proposedDestinationIndexPath : NSIndexPath) -> NSIndexPath {
-		if dataSource?.rowAtIndexPath(proposedDestinationIndexPath).type is MovableCellType {
+		if dataSource?.rowAtIndexPath(proposedDestinationIndexPath)?.type is MovableCellType {
 			return proposedDestinationIndexPath
 		} else {
 			return sourceIndexPath
