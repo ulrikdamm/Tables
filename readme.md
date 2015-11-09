@@ -4,11 +4,12 @@ Tables is a library for turning UITablesViews from a mess of delegation and stat
 
 ## Examples
 
-Here’s a login form in a tableview:
+Here's what you can do with Tables:
 
 ![Demo app screenshot](https://raw.githubusercontent.com/ulrikdamm/Tables/master/demo.png)
+![Demo app 2 screenshot](https://raw.githubusercontent.com/ulrikdamm/Tables/master/demo2.png)
 
-This is the code that generates the tableview cells:
+This is the code that generates the login form table view cells:
 
 ```swift
 func generateSections() -> [Section] {
