@@ -11,7 +11,7 @@ import Foundation
 public protocol SectionType : Identifiable {
 	var header : String? { get }
 	var footer : String? { get }
-	var rows : [Row] { get }
+	var rows : [CellType] { get }
 }
 
 public func ==(lhs : SectionType, rhs : SectionType) -> Bool {
@@ -22,9 +22,9 @@ public struct Section : SectionType {
 	public var id : String
 	public var header : String?
 	public var footer : String?
-	public var rows : [Row]
+	public var rows : [CellType]
 	
-	public init(_ sectionId : String, header : String? = nil, footer : String? = nil, rows : [Row]) {
+	public init(_ sectionId : String, header : String? = nil, footer : String? = nil, rows : [CellType]) {
 		self.id = sectionId
 		self.header = header
 		self.footer = footer

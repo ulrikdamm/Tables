@@ -46,10 +46,10 @@ public class DeclarableTableViewDiff {
 	}
 	
 	public func rowEquals(row1 : Identifiable, row2 : Identifiable) -> Bool {
-		if let row1 = row1 as? Row, row2 = row2 as? Row {
-			if row1 == row2 {
-				if let rowType1 = row1.type as? RefreshCellType {
-					return !rowType1.shouldRefresh(to: row2.type)
+		if let row1 = row1 as? CellType, row2 = row2 as? CellType {
+			if row1.id == row2.id {
+				if let rowType1 = row1 as? RefreshCellType {
+					return !rowType1.shouldRefresh(to: row2)
 				} else {
 					return true
 				}
