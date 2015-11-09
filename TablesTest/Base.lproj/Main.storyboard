@@ -36,8 +36,8 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="eoV-lZ-CiQ" kind="relationship" relationship="viewControllers" id="br9-oO-nPD"/>
                         <segue destination="hzh-Or-m74" kind="relationship" relationship="viewControllers" id="DCX-FI-23N"/>
+                        <segue destination="eoV-lZ-CiQ" kind="relationship" relationship="viewControllers" id="br9-oO-nPD"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dsI-bJ-2z0" userLabel="First Responder" sceneMemberID="firstResponder"/>

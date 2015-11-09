@@ -49,12 +49,12 @@ class ViewController2 : UIViewController {
 	}
 	
 	func generateSections() -> [Section] {
-		let nameRow = Row("name", TextInputCell(title: "Name", placeholder: "Donald Duck", enabled: !loading, invalid: nameInvalid, value: name, valueChanged: { [weak self] in self?.name = $0 }, done: { [weak self] _ in self?.selectRow("email") }))
-		let emailRow = Row("email", TextInputCell(title: "Email", placeholder: "donald@duck.com", enabled: !loading, invalid: emailInvalid, value: email, valueChanged: { [weak self] in self?.email = $0 }, done: { [weak self] _ in self?.submit() }))
+		let nameRow = TextInputCell(id: "name", title: "Name", placeholder: "Donald Duck", enabled: !loading, invalid: nameInvalid, value: name, valueChanged: { [weak self] in self?.name = $0 }, done: { [weak self] _ in self?.selectRow("email") })
+		let emailRow = TextInputCell(id: "email", title: "Email", placeholder: "donald@duck.com", enabled: !loading, invalid: emailInvalid, value: email, valueChanged: { [weak self] in self?.email = $0 }, done: { [weak self] _ in self?.submit() })
 		
 		let inputSection = Section("input", header: "User information", footer: "This simulates a form field. Inputs will be validated, and disabled when a request is processing.", rows: [nameRow, emailRow])
 		
-		let submitRow = Row("submit", ButtonCell(title: "Submit", loading: loading, action: { [weak self] in self?.submit() }))
+		let submitRow = ButtonCell(id: "submit", title: "Submit", enabled: !loading, loading: loading, action: { [weak self] in self?.submit() })
 		
 		let submitSection = Section("submit", rows: [submitRow])
 		

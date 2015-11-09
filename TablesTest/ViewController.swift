@@ -58,15 +58,14 @@ class ViewController : UIViewController {
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: Selector("edit:"))
 	}
 	
-	func rowForCar(index : Int, car : Car) -> Row {
-		let cell = EditableDetailsSubtitleCell(
+	func rowForCar(index : Int, car : Car) -> CellType {
+		return EditableDetailsSubtitleCell(
+			id: "car_\(index)",
 			title: car.name,
 			subtitle: String(car.year),
 			action: { [weak self] in self?.showCar(car) },
 			deleteAction: { [weak self] in self?.deleteCar(car) }
 		)
-		
-		return Row("car\(index)", cell)
 	}
 	
 	func generateSections() -> [Section] {

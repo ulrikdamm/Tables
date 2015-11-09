@@ -35,12 +35,12 @@ public class DeclarableTableViewDataSource : NSObject, UITableViewDataSource {
 			let indexPath = tableView.indexPathForCell(cell)
 			
 			if let indexPath = indexPath, var cell = cell as? DeclarativeCell {
-				cell.cellType = rowAtIndexPath(indexPath)!.type
+				cell.cellType = rowAtIndexPath(indexPath)!
 			}
 		}
 	}
 	
-	public func rowAtIndexPath(indexPath : NSIndexPath) -> Row? {
+	public func rowAtIndexPath(indexPath : NSIndexPath) -> CellType? {
 		guard indexPath.section < sections.count else { return nil }
 		let section = sections[indexPath.section]
 		
@@ -74,7 +74,7 @@ public class DeclarableTableViewDataSource : NSObject, UITableViewDataSource {
 	
 	public func tableView(tableView : UITableView, cellForRowAtIndexPath indexPath : NSIndexPath) -> UITableViewCell {
 		let row = rowAtIndexPath(indexPath)!
-		let cellId = row.type.dynamicType.typeId
+		let cellId = row.dynamicType.typeId
 		
 		let cell : UITableViewCell
 		
@@ -89,7 +89,7 @@ public class DeclarableTableViewDataSource : NSObject, UITableViewDataSource {
 				if let c = tableView.dequeueReusableCellWithIdentifier(cellId) {
 					cell = c
 				} else {
-					if row.type is SubtitleCellType {
+					if row is SubtitleCellType {
 						cell = TablesPlainCell(style: .Subtitle, reuseIdentifier: cellId)
 					} else {
 						cell = TablesPlainCell(style: .Default, reuseIdentifier: cellId)
@@ -99,7 +99,7 @@ public class DeclarableTableViewDataSource : NSObject, UITableViewDataSource {
 		}
 		
 		if var cell = cell as? DeclarativeCell {
-			cell.cellType = row.type
+			cell.cellType = row
 		}
 		
 		return cell
@@ -118,20 +118,20 @@ public class DeclarableTableViewDataSource : NSObject, UITableViewDataSource {
 	}
 	
 	public func tableView(tableView : UITableView, canEditRowAtIndexPath indexPath : NSIndexPath) -> Bool {
-		return rowAtIndexPath(indexPath)!.type is EditableCellType
+		return rowAtIndexPath(indexPath)! is EditableCellType
 	}
 	
 	public func tableView(tableView : UITableView, commitEditingStyle editingStyle : UITableViewCellEditingStyle, forRowAtIndexPath indexPath : NSIndexPath) {
-		guard let row = rowAtIndexPath(indexPath)!.type as? EditableCellType else { fatalError("Editing non-editable cell at \(indexPath)") }
+		guard let row = rowAtIndexPath(indexPath)! as? EditableCellType else { fatalError("Editing non-editable cell at \(indexPath)") }
 		row.deleteAction()
 	}
 	
 	public func tableView(tableView : UITableView, canMoveRowAtIndexPath indexPath : NSIndexPath) -> Bool {
-		return rowAtIndexPath(indexPath)!.type is MovableCellType
+		return rowAtIndexPath(indexPath)! is MovableCellType
 	}
 	
 	public func tableView(tableView : UITableView, moveRowAtIndexPath sourceIndexPath : NSIndexPath, toIndexPath destinationIndexPath : NSIndexPath) {
-		guard let row = rowAtIndexPath(sourceIndexPath)!.type as? MovableCellType else { fatalError("Moving non-movable cell at \(sourceIndexPath)") }
+		guard let row = rowAtIndexPath(sourceIndexPath)! as? MovableCellType else { fatalError("Moving non-movable cell at \(sourceIndexPath)") }
 		
 		var section = sections[sourceIndexPath.section]
 		let item = section.rows.removeAtIndex(sourceIndexPath.row)
@@ -148,7 +148,7 @@ public class DeclarableTableViewDataSource : NSObject, UITableViewDataSource {
 		return index >= sections.count ? nil : sections[index]
 	}
 	
-	public func rowForIndexPath(indexPath : NSIndexPath) -> Row? {
+	public func rowForIndexPath(indexPath : NSIndexPath) -> CellType? {
 		guard indexPath.section < sections.count else { return nil }
 		guard indexPath.row < sections[indexPath.section].rows.count else { return nil }
 		return sections[indexPath.section].rows[indexPath.row]
