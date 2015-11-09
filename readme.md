@@ -6,7 +6,7 @@ Tables is a library for turning UITablesViews from a mess of delegation and stat
 
 Here’s a login form in a tableview:
 
-[]
+![Demo app screenshot](https://raw.githubusercontent.com/ulrikdamm/Tables/master/demo.png)
 
 This is the code that generates the tableview cells:
 
