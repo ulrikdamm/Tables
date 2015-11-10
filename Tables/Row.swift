@@ -116,7 +116,7 @@ public struct ImageCell : ImageCellType {
     }
 }
 
-public struct ImageDetailsCell: ImageCellType, DetailsCellType {
+public struct ImageDetailsCell: ImageCellType, SubtitleCellType, DetailsCellType {
     public let id : String
     public let title : String?
     public let subtitle : String?
