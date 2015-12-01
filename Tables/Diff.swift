@@ -43,4 +43,25 @@ public class Diff {
 		
 		return changes
 	}
+	
+	public class func unorderedDiff<T, U>(list1 : [T], var list2 : [U], identifier1 : T -> String, identifier2 : U -> String) -> (add : [T], update : [T], remove : [U]) {
+		var add : [T] = []
+		var update : [T] = []
+		var remove : [U] = []
+		
+		for item1 in list1 {
+			if let index = list2.indexOf({ item in identifier2(item) == identifier1(item1) }) {
+				list2.removeAtIndex(index)
+				update.append(item1)
+			} else {
+				add.append(item1)
+			}
+		}
+		
+		for item2 in list2 {
+			remove.append(item2)
+		}
+		
+		return (add, update, remove)
+	}
 }
