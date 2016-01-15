@@ -13,11 +13,11 @@ public class InputCell : UITableViewCell, DeclarativeCell, UITextFieldDelegate {
 	var value : String? { get { return view.input.text } set { view.input.text = newValue } }
 	var placeholder : String? { didSet { view.input.placeholder = placeholder } }
 	
-	let view = InputCellView()
+	public let view = InputCellView()
 	
 	var awatingText : String?
 	
-	override init(style : UITableViewCellStyle, reuseIdentifier : String?) {
+	public override init(style : UITableViewCellStyle, reuseIdentifier : String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		setup()
 	}
@@ -79,19 +79,19 @@ public class InputCell : UITableViewCell, DeclarativeCell, UITextFieldDelegate {
 	}
 }
 
-class InputCellView : UIStackView {
-	init() {
+public class InputCellView : UIStackView {
+	public init() {
 		super.init(frame: CGRectZero)
 		setup()
 	}
 	
-	required init?(coder aDecoder : NSCoder) {
+	public required init?(coder aDecoder : NSCoder) {
 		super.init(coder: aDecoder)
 		setup()
 	}
 	
-	let label = UILabel()
-	let input = UITextField(frame: CGRectZero)
+	public let label = UILabel()
+	public let input = UITextField(frame: CGRectZero)
 	
 	func setup() {
 		distribution = .Fill
