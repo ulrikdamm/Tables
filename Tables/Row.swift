@@ -212,16 +212,18 @@ public struct TextInputCell : InputCellType {
 	public let placeholder : String?
 	public let enabled : Bool
 	public let invalid : Bool
+	public let secure : Bool
 	public let value : String
 	public let valueChanged : String -> Void
 	public let done : (String -> Void)?
 	
-	public init(id : String, title : String?, placeholder : String? = nil, enabled : Bool = true, invalid : Bool = false, value : String, valueChanged : String -> Void, done : (String -> Void)? = nil) {
+	public init(id : String, title : String?, placeholder : String? = nil, enabled : Bool = true, invalid : Bool = false, secure : Bool = false, value : String, valueChanged : String -> Void, done : (String -> Void)? = nil) {
 		self.id = id
 		self.title = title
 		self.placeholder = placeholder
 		self.enabled = enabled
 		self.invalid = invalid
+		self.secure = secure
 		self.value = value
 		self.valueChanged = valueChanged
 		self.done = done

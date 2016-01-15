@@ -52,6 +52,7 @@ public class InputCell : UITableViewCell, DeclarativeCell, UITextFieldDelegate {
 				placeholder = cellType.placeholder
 				view.input.enabled = cellType.enabled
 				view.label.textColor = (cellType.invalid ? .redColor() : nil)
+				view.input.secureTextEntry = cellType.secure
 //				view.input.returnKeyType = cellType.returnButton ?? .Default
 			}
 		}
