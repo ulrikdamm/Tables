@@ -38,7 +38,7 @@ public class TablesPlainCell : UITableViewCell, DeclarativeCell {
 public class TablesButtonCell : UITableViewCell, DeclarativeCell {
 	lazy var spinner = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
 	
-	override init(style : UITableViewCellStyle, reuseIdentifier : String?) {
+	public override init(style : UITableViewCellStyle, reuseIdentifier : String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		setup()
 	}
