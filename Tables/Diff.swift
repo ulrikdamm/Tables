@@ -77,13 +77,29 @@ public class Diff {
 		let ops = steps.reverse().map { position in (position, matrix[position.y][position.x]) }.flatMap { position, cell -> Change? in
 			switch cell.operation {
 			case .None: return nil
-			case .Insert: return .Insert(max(position.y - 1, 0))
-			case .Delete: return .Delete(max(position.y - 1, 0))
-			case .Substitute: return .Update(max(position.y - 1, 0))
+			case .Insert: return .Insert(at: position.y - 1)
+			case .Delete: return .Remove(at: position.x - 1)
+			case .Substitute: return .Update(at: position.x - 1)
 			}
 		}
 		
-		return ops
+		let opsWithMoves = ops.reduce([Change]()) { (var all, this) in
+			if case .Insert(let position) = this {
+				if let index = all.indexOf({ if case .Remove(let index) = $0 where from[index] == to[position] { return true } else { return false } }) {
+					all[index] = .Move(from: index, to: position)
+					return all
+				}
+			} else if case .Remove(let position) = this {
+				if let index = all.indexOf({ if case .Insert(let index) = $0 where to[index] == from[position] { return true } else { return false } }) {
+					all[index] = .Move(from: position, to: index)
+					return all
+				}
+			}
+			
+			return all + [this]
+		}
+		
+		return opsWithMoves
 	}
 	
 	class func distanceMatrix<T : Equatable>(from from : [T], to : [T]) -> [[Cell]] {
@@ -108,7 +124,7 @@ public class Diff {
 				} else {
 					let delete = Cell(operation: .Delete, value: all.last!.value + 1)
 					let insert = Cell(operation: .Insert, value: rows.last![cellindex].value + 1)
-					let substitute = Cell(operation: .Substitute, value: rows.last![cellindex - 1].value + 1)
+					let substitute = Cell(operation: .Substitute, value: rows.last![cellindex - 1].value + 2)
 					cell = [delete, insert, substitute].minElement()!
 				}
 				
