@@ -64,4 +64,90 @@ public class Diff {
 		
 		return (add, update, remove)
 	}
+	
+	class func WFDistance<T : Equatable>(from from : [T], to : [T]) -> [Change] {
+		let matrix = distanceMatrix(from: from, to: to)
+		
+		var steps = [(x: matrix[0].count - 1, y: matrix.count - 1)]
+		
+		while let step = findNextStep(matrix, from: steps.last!) {
+			steps.append(step)
+		}
+		
+		let ops = steps.reverse().map { position in (position, matrix[position.y][position.x]) }.flatMap { position, cell -> Change? in
+			switch cell.operation {
+			case .None: return nil
+			case .Insert: return .Insert(at: position.y - 1)
+			case .Delete: return .Remove(at: position.y - 1)
+			case .Substitute: return .Update(at: position.y - 1)
+			}
+		}
+		
+		return ops
+	}
+	
+	class func distanceMatrix<T : Equatable>(from from : [T], to : [T]) -> [[Cell]] {
+		let initialRow = (0...from.count).map { Cell(operation: ($0 == 0 ? .None : .Delete), value: $0) }
+		
+		let rows = (1...to.count).reduce([initialRow]) { rows, rowindex in
+			let initialCell = Cell(operation: .Insert, value: rowindex)
+			
+			if from.count == 0 {
+				return rows + [[initialCell]]
+			}
+			
+			let row = (1...from.count).reduce([initialCell]) { all, cellindex in
+				let cell : Cell
+				
+				if from[cellindex - 1] == to[rowindex - 1] {
+					cell = Cell(operation: .None, value: rows.last![cellindex - 1].value)
+				} else {
+					let delete = Cell(operation: .Delete, value: all.last!.value + 1)
+					let insert = Cell(operation: .Insert, value: rows.last![cellindex].value + 1)
+					let substitute = Cell(operation: .Substitute, value: rows.last![cellindex - 1].value + 1)
+					cell = [delete, insert, substitute].minElement()!
+				}
+				
+				return all + [cell]
+			}
+			
+			return rows + [row]
+		}
+		
+		return rows
+	}
+	
+	typealias Position = (x : Int, y : Int)
+	
+	class func findNextStep(matrix : [[Cell]], from : Position) -> Position? {
+		if from.x == 0 && from.y == 0 {
+			return nil
+		}
+		
+		switch matrix[from.y][from.x].operation {
+		case .None, .Substitute: return (x: from.x - 1, y: from.y - 1)
+		case .Insert: return (x: from.x, y: from.y - 1)
+		case .Delete: return (x: from.x - 1, y: from.y)
+		}
+	}
+}
+
+struct Cell {
+	enum Operation : Int { case None = 3, Insert = 1, Delete = 0, Substitute = 2 }
+	let operation : Operation
+	let value : Int
+}
+
+extension Cell : Comparable, Equatable {}
+
+func ==(lhs : Cell, rhs : Cell) -> Bool {
+	return lhs.value == rhs.value && lhs.operation == rhs.operation
+}
+
+func <(lhs : Cell, rhs : Cell) -> Bool {
+	if lhs.value == rhs.value {
+		return lhs.operation.rawValue < rhs.operation.rawValue
+	} else {
+		return lhs.value < rhs.value
+	}
 }

@@ -60,19 +60,19 @@ public class DeclarableTableViewDiff {
 	}
 	
 	public func diffSections(from from : [Section], to : [Section]) -> (sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]]) {
-		let fromIds = from.map { $0 as Identifiable }
-		let toIds = to.map { $0 as Identifiable }
+		let fromIds = from.map { $0.id }
+		let toIds = to.map { $0.id }
 		
-		let sectionChanges = Diff.diff(fromIds, toIds, equals: sectionEquals)
+		let sectionChanges = Diff.WFDistance(from: fromIds, to: toIds)
 		
 		var rowChanges : [Int: [Diff.Change]] = [:]
 		
 		for (toIndex, section) in to.enumerate() {
 			if let fromIndex = from.indexOf({ $0.id == section.id }) {
-				let fromRowIds = from[fromIndex].rows.map { $0 as Identifiable }
-				let toRowIds = section.rows.map { $0 as Identifiable }
+				let fromRowIds = from[fromIndex].rows.map { $0.id }
+				let toRowIds = section.rows.map { $0.id }
 				
-				let changes = Diff.diff(fromRowIds, toRowIds, equals: rowEquals)
+				let changes = Diff.WFDistance(from: fromRowIds, to: toRowIds)
 				
 				if changes.count > 0 {
 					rowChanges[toIndex] = changes
