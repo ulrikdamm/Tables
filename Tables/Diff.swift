@@ -77,9 +77,9 @@ public class Diff {
 		let ops = steps.reverse().map { position in (position, matrix[position.y][position.x]) }.flatMap { position, cell -> Change? in
 			switch cell.operation {
 			case .None: return nil
-			case .Insert: return .Insert(at: position.y - 1)
-			case .Delete: return .Remove(at: position.y - 1)
-			case .Substitute: return .Update(at: position.y - 1)
+			case .Insert: return .Insert(max(position.y - 1, 0))
+			case .Delete: return .Delete(max(position.y - 1, 0))
+			case .Substitute: return .Update(max(position.y - 1, 0))
 			}
 		}
 		
@@ -89,7 +89,11 @@ public class Diff {
 	class func distanceMatrix<T : Equatable>(from from : [T], to : [T]) -> [[Cell]] {
 		let initialRow = (0...from.count).map { Cell(operation: ($0 == 0 ? .None : .Delete), value: $0) }
 		
-		let rows = (1...to.count).reduce([initialRow]) { rows, rowindex in
+		if to.count == 0 {
+			return [initialRow]
+		}
+		
+		return (1...to.count).reduce([initialRow]) { rows, rowindex in
 			let initialCell = Cell(operation: .Insert, value: rowindex)
 			
 			if from.count == 0 {
@@ -113,8 +117,6 @@ public class Diff {
 			
 			return rows + [row]
 		}
-		
-		return rows
 	}
 	
 	typealias Position = (x : Int, y : Int)
