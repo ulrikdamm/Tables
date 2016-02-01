@@ -9,13 +9,13 @@
 import UIKit
 
 public class InputCell : UITableViewCell, DeclarativeCell, UITextFieldDelegate {
-	var title : String? { didSet { view.label.text = title } }
-	var value : String? { get { return view.input.text } set { view.input.text = newValue } }
-	var placeholder : String? { didSet { view.input.placeholder = placeholder } }
+	public var title : String? { didSet { view.label.text = title } }
+	public var value : String? { get { return view.input.text } set { view.input.text = newValue } }
+	public var placeholder : String? { didSet { view.input.placeholder = placeholder } }
 	
 	public let view = InputCellView()
 	
-	var awatingText : String?
+	public var awatingText : String?
 	
 	public override init(style : UITableViewCellStyle, reuseIdentifier : String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
