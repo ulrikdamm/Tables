@@ -17,6 +17,8 @@ public class DeclarableTableViewDataSource : NSObject, UITableViewDataSource {
 	
 	private var registedCellTypes : Set<String> = []
 	
+	var updateCount = 0
+	
 	public func attachToTableView(tableView : UITableView) {
 		self.tableView = tableView
 		registedCellTypes = []
@@ -24,18 +26,23 @@ public class DeclarableTableViewDataSource : NSObject, UITableViewDataSource {
 	}
 	
 	public func update(sections : [Section]) {
-		let old = self.sections
-		self.sections = sections
-		
 		guard let tableView = tableView else { return }
 		let diff = DeclarableTableViewDiff(tableView: tableView)
-		diff.updateTableView(old, to: sections)
 		
-		for cell in tableView.visibleCells {
-			let indexPath = tableView.indexPathForCell(cell)
+		updateCount += 1
+		
+		diff.performDiff(updateCount, from: self.sections, to: sections) { id, changes in
+			guard id == self.updateCount else { return }
 			
-			if let indexPath = indexPath, var cell = cell as? DeclarativeCell {
-				cell.cellType = rowAtIndexPath(indexPath)!
+			self.sections = sections
+			diff.performUpdate(changes)
+			
+			for cell in tableView.visibleCells {
+				let indexPath = tableView.indexPathForCell(cell)
+				
+				if let indexPath = indexPath, var cell = cell as? DeclarativeCell {
+					cell.cellType = self.rowAtIndexPath(indexPath)!
+				}
 			}
 		}
 	}

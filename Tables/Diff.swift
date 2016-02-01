@@ -103,36 +103,32 @@ public class Diff {
 	}
 	
 	class func distanceMatrix<T : Equatable>(from from : [T], to : [T]) -> [[Cell]] {
-		let initialRow = (0...from.count).map { Cell(operation: ($0 == 0 ? .None : .Delete), value: $0) }
+		var matrix = [[Cell?]](count: to.count + 1, repeatedValue: [Cell?](count: from.count + 1, repeatedValue: nil))
 		
-		if to.count == 0 {
-			return [initialRow]
-		}
-		
-		return (1...to.count).reduce([initialRow]) { rows, rowindex in
-			let initialCell = Cell(operation: .Insert, value: rowindex)
-			
-			if from.count == 0 {
-				return rows + [[initialCell]]
-			}
-			
-			let row = (1...from.count).reduce([initialCell]) { all, cellindex in
+		for y in (0...to.count) {
+			for x in (0...from.count) {
 				let cell : Cell
 				
-				if from[cellindex - 1] == to[rowindex - 1] {
-					cell = Cell(operation: .None, value: rows.last![cellindex - 1].value)
-				} else {
-					let delete = Cell(operation: .Delete, value: all.last!.value + 1)
-					let insert = Cell(operation: .Insert, value: rows.last![cellindex].value + 1)
-					let substitute = Cell(operation: .Substitute, value: rows.last![cellindex - 1].value + 2)
-					cell = [delete, insert, substitute].minElement()!
+				switch (x, y) {
+				case (0, 0): cell = Cell(operation: .None, value: 0)
+				case (_, 0): cell = Cell(operation: .Delete, value: x)
+				case (0, _): cell = Cell(operation: .Insert, value: y)
+				case (_, _):
+					if from[x - 1] == to[y - 1] {
+						cell = Cell(operation: .None, value: matrix[y - 1][x - 1]!.value)
+					} else {
+						let delete = Cell(operation: .Delete, value: matrix[y][x - 1]!.value + 1)
+						let insert = Cell(operation: .Insert, value: matrix[y - 1][x]!.value + 1)
+						let substitute = Cell(operation: .Substitute, value: matrix[y - 1][x - 1]!.value + 2)
+						cell = [delete, insert, substitute].minElement()!
+					}
 				}
 				
-				return all + [cell]
+				matrix[y][x] = cell
 			}
-			
-			return rows + [row]
 		}
+		
+		return matrix.map { $0.flatMap { $0 } }
 	}
 	
 	typealias Position = (x : Int, y : Int)

@@ -92,6 +92,7 @@ class ViewController : UIViewController {
 	}
 	
 	func add(sender : AnyObject?) {
-		cars.append(Car(name: "Unnamed car #\(arc4random_uniform(1000))", year: 1980 + Int(arc4random_uniform(35)), used: arc4random_uniform(100) % 2 == 0))
+		let newcars = (0..<50).map { _ in Car(name: "Unnamed car #\(arc4random_uniform(1000))", year: 1980 + Int(arc4random_uniform(35)), used: arc4random_uniform(100) % 2 == 0) }
+		cars += newcars
 	}
 }

@@ -15,11 +15,26 @@ public class DeclarableTableViewDiff {
 		self.tableView = tableView
 	}
 	
+	let queue = dispatch_queue_create("Table view diff queue", DISPATCH_QUEUE_SERIAL)
+	
 	var animationForRowType : (String -> UITableViewRowAnimation?)?
 	
-	public func updateTableView(from : [Section], to : [Section]) {
-		let (sectionChanges, rowChanges) = diffSections(from: from, to: to)
+	public typealias DiffData = (sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]])
+	
+	public func performDiff(id : Int, from : [Section], to : [Section], completion : (Int, DiffData) -> Void) {
+		let fromRowCount = from.map { $0.rows.count }.reduce(0, combine: +)
+		let toRowCount = to.map { $0.rows.count }.reduce(0, combine: +)
 		
+		if fromRowCount > 25 || toRowCount > 25 {
+			getChangesAsync(from, to: to) { changes in
+				completion(id, changes)
+			}
+		} else {
+			completion(id, diffSections(from: from, to: to))
+		}
+	}
+	
+	public func performUpdate(sectionChanges sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]]) {
 		if sectionChanges.count > 0 || rowChanges.count > 0 {
 			tableView.beginUpdates()
 			
@@ -34,6 +49,16 @@ public class DeclarableTableViewDiff {
 			}
 			
 			tableView.endUpdates()
+		}
+	}
+	
+	func getChangesAsync(from : [Section], to : [Section], completion : (sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]]) -> Void) {
+		dispatch_async(queue) {
+			let (sectionChanges, rowChanges) = self.diffSections(from: from, to: to)
+			
+			dispatch_async(dispatch_get_main_queue()) {
+				completion(sectionChanges: sectionChanges, rowChanges: rowChanges)
+			}
 		}
 	}
 	
@@ -85,7 +110,7 @@ public class DeclarableTableViewDiff {
 	
 	public func applySectionChange(change : Diff.Change) -> Void {
 		switch change {
-        case .Insert(let at): tableView.insertSections(NSIndexSet(index: at), withRowAnimation: .Automatic)
+		case .Insert(let at): tableView.insertSections(NSIndexSet(index: at), withRowAnimation: .Automatic)
 		case .Remove(let at): tableView.deleteSections(NSIndexSet(index: at), withRowAnimation: .Automatic)
 		case .Move(let from, let to): tableView.moveSection(from, toSection: to)
 		case .Update(let at): tableView.reloadSections(NSIndexSet(index: at), withRowAnimation: .None)
