@@ -23,6 +23,10 @@ public protocol SubtitleCellType : CellType {
 	var subtitle : String? { get }
 }
 
+public protocol ImageCellType : CellType {
+    var image : UIImage? { get }
+}
+
 public protocol PressableCellType : CellType {
 	
 	var action : Void -> Void { get }
@@ -98,6 +102,34 @@ public struct DetailsCell : DetailsCellType {
 		self.title = title
 		self.action = action
 	}
+}
+
+public struct ImageCell : ImageCellType {
+    public let id : String
+    public let title : String?
+    public let image : UIImage?
+    
+    public init(id : String, title: String?, image : UIImage?) {
+        self.id = id
+        self.title = title
+        self.image = image
+    }
+}
+
+public struct ImageDetailsCell: ImageCellType, SubtitleCellType, DetailsCellType {
+    public let id : String
+    public let title : String?
+    public let subtitle : String?
+    public let action : Void -> Void
+    public let image : UIImage?
+    
+    public init(id : String, title : String?, subtitle : String?, image: UIImage?, action : Void -> Void) {
+        self.id = id
+        self.title = title
+        self.image = image
+        self.subtitle = subtitle
+        self.action = action
+    }
 }
 
 public struct DetailsSubtitleCell : SubtitleCellType, DetailsCellType {
