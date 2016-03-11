@@ -99,8 +99,22 @@ public class DeclarableTableViewDiff {
 				
 				let changes = Diff.WFDistance(from: fromRowIds, to: toRowIds)
 				
-				if changes.count > 0 {
-					rowChanges[toIndex] = changes
+				for change in changes {
+					if case .Remove(_) = change {
+						let fromIndex = from.indexOf { $0.id == section.id }!
+						
+						if let changes = rowChanges[fromIndex] {
+							rowChanges[fromIndex] = changes + [change]
+						} else {
+							rowChanges[fromIndex] = [change]
+						}
+					} else {
+						if let changes = rowChanges[toIndex] {
+							rowChanges[toIndex] = changes + [change]
+						} else {
+							rowChanges[toIndex] = [change]
+						}
+					}
 				}
 			}
 		}
