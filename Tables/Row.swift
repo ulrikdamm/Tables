@@ -49,7 +49,7 @@ public protocol RefreshCellType {
 }
 
 public protocol InputCellType : CellType {
-	typealias Value
+	associatedtype Value
 	
 	var placeholder : String? { get }
 	var enabled : Bool { get }

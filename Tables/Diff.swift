@@ -44,22 +44,19 @@ public class Diff {
 		return changes
 	}
 	
-	public class func unorderedDiff<T, U>(list1 : [T], var list2 : [U], identifier1 : T -> String, identifier2 : U -> String) -> (add : [T], update : [T], remove : [U]) {
+	public class func unorderedDiff<T, U>(list1 : [T], list2 : [U], identifier1 : T -> String, identifier2 : U -> String) -> (add : [T], update : [T], remove : [U]) {
 		var add : [T] = []
 		var update : [T] = []
-		var remove : [U] = []
+		
+		var remove = list2
 		
 		for item1 in list1 {
-			if let index = list2.indexOf({ item in identifier2(item) == identifier1(item1) }) {
-				list2.removeAtIndex(index)
+			if let index = remove.indexOf({ item in identifier2(item) == identifier1(item1) }) {
+				remove.removeAtIndex(index)
 				update.append(item1)
 			} else {
 				add.append(item1)
 			}
-		}
-		
-		for item2 in list2 {
-			remove.append(item2)
 		}
 		
 		return (add, update, remove)
@@ -83,16 +80,18 @@ public class Diff {
 			}
 		}
 		
-		let opsWithMoves = ops.reduce([Change]()) { (var all, this) in
+		let opsWithMoves = ops.reduce([Change]()) { (all, this) in
 			if case .Insert(let position) = this {
 				if let index = all.indexOf({ if case .Remove(let index) = $0 where from[index] == to[position] { return true } else { return false } }) {
-					all[index] = .Move(from: index, to: position)
-					return all
+					var new = all
+					new[index] = .Move(from: index, to: position)
+					return new
 				}
 			} else if case .Remove(let position) = this {
 				if let index = all.indexOf({ if case .Insert(let index) = $0 where to[index] == from[position] { return true } else { return false } }) {
-					all[index] = .Move(from: position, to: index)
-					return all
+					var new = all
+					new[index] = .Move(from: position, to: index)
+					return new
 				}
 			}
 			

@@ -60,7 +60,7 @@ public class InputCell : UITableViewCell, DeclarativeCell, UITextFieldDelegate {
 	
 	public func textField(textField : UITextField, shouldChangeCharactersInRange range : NSRange, replacementString string : String) -> Bool {
 		let text = textField.text ?? ""
-		let r = Range(start: text.startIndex.advancedBy(range.location), end: text.startIndex.advancedBy(range.location + range.length))
+		let r = text.startIndex.advancedBy(range.location) ..< text.startIndex.advancedBy(range.location + range.length)
 		let newText = text.stringByReplacingCharactersInRange(r, withString: string)
 		awatingText = newText
 		

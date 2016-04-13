@@ -35,7 +35,7 @@ public class DeclarableTableViewDataSource : NSObject, UITableViewDataSource {
 			guard id == self.updateCount else { return }
 			
 			self.sections = sections
-			diff.performUpdate(changes)
+			diff.performUpdate(sectionChanges: changes.0, rowChanges: changes.1)
 			
 			for cell in tableView.visibleCells {
 				let indexPath = tableView.indexPathForCell(cell)
