@@ -8,14 +8,12 @@
 
 import UIKit
 
-public struct IndexPath {
-	public let section: Int
-	public let item: Int
-}
-
-public extension IndexPath {
-	init(indexPath : NSIndexPath) {
-		self.section = indexPath.section
-		self.item = indexPath.row
+public struct SimpleIndexPath {
+	public let section : Int
+	public let item : Int
+	
+	init(indexPath : IndexPath) {
+		section = indexPath.section
+		item = indexPath.row
 	}
 }

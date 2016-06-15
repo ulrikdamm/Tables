@@ -11,7 +11,7 @@ import XCTest
 
 class TablesTests : XCTestCase {
     func testPerformanceExample() {
-        measureBlock {
+        measure {
 			let from = Array(0..<100)
 			let to = Array(100..<200)
 			

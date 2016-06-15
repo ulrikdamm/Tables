@@ -18,7 +18,7 @@ public class TablesPlainCell : UITableViewCell, DeclarativeCell {
 			}
 			
 			if cellType is DetailsCellType {
-				accessoryType = .DisclosureIndicator
+				accessoryType = .disclosureIndicator
 			}
 			
 			if let cellType = cellType as? SubtitleCellType {
@@ -42,7 +42,7 @@ public class TablesPlainCell : UITableViewCell, DeclarativeCell {
 }
 
 public class TablesButtonCell : UITableViewCell, DeclarativeCell {
-	lazy var spinner = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+	lazy var spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
 	
 	public override init(style : UITableViewCellStyle, reuseIdentifier : String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -55,7 +55,7 @@ public class TablesButtonCell : UITableViewCell, DeclarativeCell {
 	}
 	
 	func setup() {
-		textLabel?.textAlignment = .Center
+		textLabel?.textAlignment = .center
 		textLabel?.textColor = tintColor
 	}
 	
@@ -67,14 +67,14 @@ public class TablesButtonCell : UITableViewCell, DeclarativeCell {
 			
 			if let cellType = cellType as? SpinnerCellType where cellType.spinning {
 				contentView.addSubview(spinner)
-				contentView.addConstraint(NSLayoutConstraint(item: spinner, attribute: .CenterX, relatedBy: .Equal, toItem: contentView, attribute: .CenterX, multiplier: 1, constant: 0))
-				contentView.addConstraint(NSLayoutConstraint(item: spinner, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
+				contentView.addConstraint(NSLayoutConstraint(item: spinner, attribute: .centerX, relatedBy: .equal, toItem: contentView, attribute: .centerX, multiplier: 1, constant: 0))
+				contentView.addConstraint(NSLayoutConstraint(item: spinner, attribute: .centerY, relatedBy: .equal, toItem: contentView, attribute: .centerY, multiplier: 1, constant: 0))
 				spinner.translatesAutoresizingMaskIntoConstraints = false
 				spinner.startAnimating()
-				textLabel?.hidden = true
+				textLabel?.isHidden = true
 			} else {
 				spinner.removeFromSuperview()
-				textLabel?.hidden = false
+				textLabel?.isHidden = false
 			}
 		}
 	}

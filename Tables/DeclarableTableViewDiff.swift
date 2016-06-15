@@ -15,13 +15,13 @@ public class DeclarableTableViewDiff {
 		self.tableView = tableView
 	}
 	
-	let queue = dispatch_queue_create("Table view diff queue", DISPATCH_QUEUE_SERIAL)
+	let queue = DispatchQueue(label: "Table view diff queue", attributes: DispatchQueueAttributes.serial)
 	
-	var animationForRowType : (String -> UITableViewRowAnimation?)?
+	var animationForRowType : ((String) -> UITableViewRowAnimation?)?
 	
 	public typealias DiffData = (sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]])
 	
-	public func performDiff(id : Int, from : [Section], to : [Section], completion : (Int, DiffData) -> Void) {
+	public func performDiff(_ id : Int, from : [Section], to : [Section], completion : (Int, DiffData) -> Void) {
 		let fromRowCount = from.map { $0.rows.count }.reduce(0, combine: +)
 		let toRowCount = to.map { $0.rows.count }.reduce(0, combine: +)
 		
@@ -34,7 +34,7 @@ public class DeclarableTableViewDiff {
 		}
 	}
 	
-	public func performUpdate(sectionChanges sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]]) {
+	public func performUpdate(sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]]) {
 		if sectionChanges.count > 0 || rowChanges.count > 0 {
 			tableView.beginUpdates()
 			
@@ -52,17 +52,17 @@ public class DeclarableTableViewDiff {
 		}
 	}
 	
-	func getChangesAsync(from : [Section], to : [Section], completion : (sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]]) -> Void) {
-		dispatch_async(queue) {
+	func getChangesAsync(_ from : [Section], to : [Section], completion : (sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]]) -> Void) {
+		queue.async {
 			let (sectionChanges, rowChanges) = self.diffSections(from: from, to: to)
 			
-			dispatch_async(dispatch_get_main_queue()) {
+			DispatchQueue.main.async {
 				completion(sectionChanges: sectionChanges, rowChanges: rowChanges)
 			}
 		}
 	}
 	
-	public func sectionEquals(section1 : Identifiable, section2 : Identifiable) -> Bool {
+	public func sectionEquals(_ section1 : Identifiable, section2 : Identifiable) -> Bool {
 		if let section1 = section1 as? Section, section2 = section2 as? Section {
 			return section1 == section2
 		} else {
@@ -70,7 +70,7 @@ public class DeclarableTableViewDiff {
 		}
 	}
 	
-	public func rowEquals(row1 : Identifiable, row2 : Identifiable) -> Bool {
+	public func rowEquals(_ row1 : Identifiable, row2 : Identifiable) -> Bool {
 		if let row1 = row1 as? CellType, row2 = row2 as? CellType {
 			if row1.id == row2.id {
 				if let rowType1 = row1 as? RefreshCellType {
@@ -84,7 +84,7 @@ public class DeclarableTableViewDiff {
 		return false
 	}
 	
-	public func diffSections(from from : [Section], to : [Section]) -> (sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]]) {
+	public func diffSections(from : [Section], to : [Section]) -> (sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]]) {
 		let fromIds = from.map { $0.id }
 		let toIds = to.map { $0.id }
 		
@@ -92,16 +92,16 @@ public class DeclarableTableViewDiff {
 		
 		var rowChanges : [Int: [Diff.Change]] = [:]
 		
-		for (toIndex, section) in to.enumerate() {
-			if let fromIndex = from.indexOf({ $0.id == section.id }) {
+		for (toIndex, section) in to.enumerated() {
+			if let fromIndex = from.index(where: { $0.id == section.id }) {
 				let fromRowIds = from[fromIndex].rows.map { $0.id }
 				let toRowIds = section.rows.map { $0.id }
 				
 				let changes = Diff.WFDistance(from: fromRowIds, to: toRowIds)
 				
 				for change in changes {
-					if case .Remove(_) = change {
-						let fromIndex = from.indexOf { $0.id == section.id }!
+					if case .remove(_) = change {
+						let fromIndex = from.index { $0.id == section.id }!
 						
 						if let changes = rowChanges[fromIndex] {
 							rowChanges[fromIndex] = changes + [change]
@@ -122,21 +122,21 @@ public class DeclarableTableViewDiff {
 		return (sectionChanges, rowChanges)
 	}
 	
-	public func applySectionChange(change : Diff.Change) -> Void {
+	public func applySectionChange(_ change : Diff.Change) -> Void {
 		switch change {
-		case .Insert(let at): tableView.insertSections(NSIndexSet(index: at), withRowAnimation: .Automatic)
-		case .Remove(let at): tableView.deleteSections(NSIndexSet(index: at), withRowAnimation: .Automatic)
-		case .Move(let from, let to): tableView.moveSection(from, toSection: to)
-		case .Update(let at): tableView.reloadSections(NSIndexSet(index: at), withRowAnimation: .None)
+		case .insert(let at): tableView.insertSections(IndexSet(integer: at), with: .automatic)
+		case .remove(let at): tableView.deleteSections(IndexSet(integer: at), with: .automatic)
+		case .move(let from, let to): tableView.moveSection(from, toSection: to)
+		case .update(let at): tableView.reloadSections(IndexSet(integer: at), with: .none)
 		}
 	}
 	
-	public func applyRowChange(section : Int, change : Diff.Change) -> Void {
+	public func applyRowChange(_ section : Int, change : Diff.Change) -> Void {
 		switch change {
-		case .Insert(let at): tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: at, inSection: section)], withRowAnimation: .Automatic)
-		case .Remove(let at): tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: at, inSection: section)], withRowAnimation: .Automatic)
-		case .Move(let from, let to): tableView.moveRowAtIndexPath(NSIndexPath(forRow: from, inSection: section), toIndexPath: NSIndexPath(forRow: to, inSection: section))
-		case .Update(let at): tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: at, inSection: section)], withRowAnimation: .Automatic)
+		case .insert(let at): tableView.insertRows(at: [Foundation.IndexPath(row: at, section: section)], with: .automatic)
+		case .remove(let at): tableView.deleteRows(at: [Foundation.IndexPath(row: at, section: section)], with: .automatic)
+		case .move(let from, let to): tableView.moveRow(at: Foundation.IndexPath(row: from, section: section), to: Foundation.IndexPath(row: to, section: section))
+		case .update(let at): tableView.reloadRows(at: [Foundation.IndexPath(row: at, section: section)], with: .automatic)
 		}
 	}
 }

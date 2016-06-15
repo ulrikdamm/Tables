@@ -14,7 +14,7 @@ public class TablesTableView : UITableView {
 	public init(style : UITableViewStyle, dataSource : DeclarableTableViewDataSource? = nil, delegate : DeclarableTableViewDelegate? = nil) {
 		tablesDataSource = dataSource ?? DeclarableTableViewDataSource()
 		tablesDelegate = delegate ?? DeclarableTableViewDelegate()
-		super.init(frame: CGRectZero, style: style)
+		super.init(frame: CGRect.zero, style: style)
 		setup()
 	}
 	
