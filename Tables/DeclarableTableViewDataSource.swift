@@ -58,7 +58,7 @@ public class DeclarableTableViewDataSource : NSObject, UITableViewDataSource {
 	}
 	
 	func cellTypeForRowOrDefault(_ type : String) -> UITableViewCell.Type? {
-		if let cellTypeForRow = cellTypeForRow, cell = cellTypeForRow(type) {
+		if let cellTypeForRow = cellTypeForRow, let cell = cellTypeForRow(type) {
 			return cell
 		}
 		
@@ -81,7 +81,7 @@ public class DeclarableTableViewDataSource : NSObject, UITableViewDataSource {
 	
 	public func tableView(_ tableView : UITableView, cellForRowAt indexPath : IndexPath) -> UITableViewCell {
 		let row = rowAtIndexPath(indexPath)!
-		let cellId = row.dynamicType.typeId
+		let cellId = type(of: row).typeId
 		
 		let cell : UITableViewCell
 		

@@ -18,17 +18,17 @@ public class DeclarableTableViewDelegate : NSObject, UITableViewDelegate {
 	public func tableView(_ tableView : UITableView, shouldHighlightRowAt indexPath : IndexPath) -> Bool {
 		let cell = dataSource?.rowAtIndexPath(indexPath)
 		
-		if let c = cell as? ButtonCell where c.enabled == false {
+		if let c = cell as? ButtonCell, c.enabled == false {
 			return false
 		}
 		
-		return cell is PressableCellType ?? true
+		return cell is PressableCellType 
 	}
 	
 	public func tableView(_ tableView : UITableView, didSelectRowAt indexPath : IndexPath) {
 		let cell = dataSource?.rowAtIndexPath(indexPath)
 		
-		if let c = cell as? ButtonCell where c.enabled == false {
+		if let c = cell as? ButtonCell, c.enabled == false {
 			return
 		}
 		

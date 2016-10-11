@@ -27,7 +27,7 @@ public class Diff {
 			if let index2 = list2.index(where: { $0.id == item.id }) {
 				if index1 != index2 {
 					changes.append(.move(from: index1, to: index2))
-				} else if let equals = equals where !equals(item, list2[index2]) {
+				} else if let equals = equals, !equals(item, list2[index2]) {
 					changes.append(.update(at: index1))
 				}
 			} else {
@@ -36,7 +36,7 @@ public class Diff {
 		}
 		
 		for (index2, item) in list2.enumerated() {
-			if !list1.contains({ $0.id == item.id }) {
+			if !list1.contains(where: { $0.id == item.id }) {
 				changes.append(.insert(at: index2))
 			}
 		}
@@ -82,13 +82,13 @@ public class Diff {
 		
 		let opsWithMoves = ops.reduce([Change]()) { (all, this) in
 			if case .insert(let position) = this {
-				if let index = all.index(where: { if case .remove(let index) = $0 where from[index] == to[position] { return true } else { return false } }) {
+				if let index = all.index(where: { if case .remove(let index) = $0, from[index] == to[position] { return true } else { return false } }) {
 					var new = all
 					new[index] = .move(from: index, to: position)
 					return new
 				}
 			} else if case .remove(let position) = this {
-				if let index = all.index(where: { if case .insert(let index) = $0 where to[index] == from[position] { return true } else { return false } }) {
+				if let index = all.index(where: { if case .insert(let index) = $0, to[index] == from[position] { return true } else { return false } }) {
 					var new = all
 					new[index] = .move(from: position, to: index)
 					return new

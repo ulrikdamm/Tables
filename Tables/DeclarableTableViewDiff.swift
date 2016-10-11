@@ -15,15 +15,15 @@ public class DeclarableTableViewDiff {
 		self.tableView = tableView
 	}
 	
-	let queue = DispatchQueue(label: "Table view diff queue", attributes: DispatchQueueAttributes.serial)
+	let queue = DispatchQueue(label: "Table view diff queue")
 	
 	var animationForRowType : ((String) -> UITableViewRowAnimation?)?
 	
 	public typealias DiffData = (sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]])
 	
-	public func performDiff(_ id : Int, from : [Section], to : [Section], completion : (Int, DiffData) -> Void) {
-		let fromRowCount = from.map { $0.rows.count }.reduce(0, combine: +)
-		let toRowCount = to.map { $0.rows.count }.reduce(0, combine: +)
+	public func performDiff(_ id : Int, from : [Section], to : [Section], completion : @escaping (Int, DiffData) -> Void) {
+		let fromRowCount = from.map { $0.rows.count }.reduce(0, +)
+		let toRowCount = to.map { $0.rows.count }.reduce(0, +)
 		
 		if fromRowCount > 25 || toRowCount > 25 {
 			getChangesAsync(from, to: to) { changes in
@@ -52,18 +52,18 @@ public class DeclarableTableViewDiff {
 		}
 	}
 	
-	func getChangesAsync(_ from : [Section], to : [Section], completion : (sectionChanges : [Diff.Change], rowChanges : [Int: [Diff.Change]]) -> Void) {
+	func getChangesAsync(_ from : [Section], to : [Section], completion : @escaping (_ sectionChanges : [Diff.Change], _ rowChanges : [Int: [Diff.Change]]) -> Void) {
 		queue.async {
 			let (sectionChanges, rowChanges) = self.diffSections(from: from, to: to)
 			
 			DispatchQueue.main.async {
-				completion(sectionChanges: sectionChanges, rowChanges: rowChanges)
+				completion(sectionChanges, rowChanges)
 			}
 		}
 	}
 	
 	public func sectionEquals(_ section1 : Identifiable, section2 : Identifiable) -> Bool {
-		if let section1 = section1 as? Section, section2 = section2 as? Section {
+		if let section1 = section1 as? Section, let section2 = section2 as? Section {
 			return section1 == section2
 		} else {
 			return false
@@ -71,7 +71,7 @@ public class DeclarableTableViewDiff {
 	}
 	
 	public func rowEquals(_ row1 : Identifiable, row2 : Identifiable) -> Bool {
-		if let row1 = row1 as? CellType, row2 = row2 as? CellType {
+		if let row1 = row1 as? CellType, let row2 = row2 as? CellType {
 			if row1.id == row2.id {
 				if let rowType1 = row1 as? RefreshCellType {
 					return !rowType1.shouldRefresh(to: row2)

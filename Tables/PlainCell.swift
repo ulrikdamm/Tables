@@ -25,7 +25,7 @@ public class TablesPlainCell : UITableViewCell, DeclarativeCell {
 				detailTextLabel?.text = cellType.subtitle
 			}
 			
-			if let cellType = cellType as? SpinnerCellType where cellType.spinning {
+			if let cellType = cellType as? SpinnerCellType, cellType.spinning {
 				accessoryView = spinner
 				spinner.startAnimating()
 			} else {
@@ -65,7 +65,7 @@ public class TablesButtonCell : UITableViewCell, DeclarativeCell {
 				textLabel?.text = cellType.title
 			}
 			
-			if let cellType = cellType as? SpinnerCellType where cellType.spinning {
+			if let cellType = cellType as? SpinnerCellType, cellType.spinning {
 				contentView.addSubview(spinner)
 				contentView.addConstraint(NSLayoutConstraint(item: spinner, attribute: .centerX, relatedBy: .equal, toItem: contentView, attribute: .centerX, multiplier: 1, constant: 0))
 				contentView.addConstraint(NSLayoutConstraint(item: spinner, attribute: .centerY, relatedBy: .equal, toItem: contentView, attribute: .centerY, multiplier: 1, constant: 0))

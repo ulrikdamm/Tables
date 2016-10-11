@@ -97,7 +97,7 @@ public struct DetailsCell : DetailsCellType {
 	public let title : String?
 	public let action : (Void) -> Void
 	
-	public init(id : String, title : String?, action : (Void) -> Void) {
+	public init(id : String, title : String?, action : @escaping (Void) -> Void) {
 		self.id = id
 		self.title = title
 		self.action = action
@@ -123,7 +123,7 @@ public struct ImageDetailsCell: ImageCellType, SubtitleCellType, DetailsCellType
     public let action : (Void) -> Void
     public let image : UIImage?
     
-    public init(id : String, title : String?, subtitle : String?, image: UIImage?, action : (Void) -> Void) {
+    public init(id : String, title : String?, subtitle : String?, image: UIImage?, action : @escaping (Void) -> Void) {
         self.id = id
         self.title = title
         self.image = image
@@ -138,7 +138,7 @@ public struct DetailsSubtitleCell : SubtitleCellType, DetailsCellType {
 	public let subtitle : String?
 	public let action : (Void) -> Void
 	
-	public init(id : String, title : String?, subtitle : String?, action : (Void) -> Void) {
+	public init(id : String, title : String?, subtitle : String?, action : @escaping (Void) -> Void) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle
@@ -153,7 +153,7 @@ public struct ButtonCell : PressableCellType, SpinnerCellType {
 	public let enabled : Bool
 	public let spinning : Bool
 	
-	public init(id : String, title : String?, enabled : Bool = true, loading : Bool = false, action : (Void) -> Void) {
+	public init(id : String, title : String?, enabled : Bool = true, loading : Bool = false, action : @escaping (Void) -> Void) {
 		self.id = id
 		self.title = title
 		self.enabled = enabled
@@ -167,7 +167,7 @@ public struct EditableCell : EditableCellType {
 	public let title : String?
 	public let deleteAction : (Void) -> Void
 	
-	public init(id : String, title : String?, deleteAction : (Void) -> Void) {
+	public init(id : String, title : String?, deleteAction : @escaping (Void) -> Void) {
 		self.id = id
 		self.title = title
 		self.deleteAction = deleteAction
@@ -180,7 +180,7 @@ public struct EditableDetailsCell : EditableCellType, DetailsCellType {
 	public let action : (Void) -> Void
 	public let deleteAction : (Void) -> Void
 	
-	public init(id : String, title : String?, action : (Void) -> Void, deleteAction : (Void) -> Void) {
+	public init(id : String, title : String?, action : @escaping (Void) -> Void, deleteAction : @escaping (Void) -> Void) {
 		self.id = id
 		self.title = title
 		self.action = action
@@ -194,7 +194,7 @@ public struct EditableSubtitleCell : EditableCellType, SubtitleCellType {
 	public let subtitle : String?
 	public let deleteAction : (Void) -> Void
 	
-	public init(id : String, title : String?, subtitle : String?, deleteAction : (Void) -> Void) {
+	public init(id : String, title : String?, subtitle : String?, deleteAction : @escaping (Void) -> Void) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle
@@ -209,7 +209,7 @@ public struct EditableDetailsSubtitleCell : EditableCellType, DetailsCellType, S
 	public let action : (Void) -> Void
 	public let deleteAction : (Void) -> Void
 	
-	public init(id : String, title : String?, subtitle : String?, action : (Void) -> Void, deleteAction : (Void) -> Void) {
+	public init(id : String, title : String?, subtitle : String?, action : @escaping (Void) -> Void, deleteAction : @escaping (Void) -> Void) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle
@@ -226,7 +226,7 @@ public struct MovableDetailsSubtitleCell : MovableCellType, DetailsCellType, Sub
 	public let deleteAction : (Void) -> Void
 	public let moveAction : (SimpleIndexPath) -> Void
 	
-	public init(id : String, title : String?, subtitle : String?, action : (Void) -> Void, deleteAction : (Void) -> Void, moveAction : (SimpleIndexPath) -> Void) {
+	public init(id : String, title : String?, subtitle : String?, action : @escaping (Void) -> Void, deleteAction : @escaping (Void) -> Void, moveAction : @escaping (SimpleIndexPath) -> Void) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle
@@ -249,7 +249,7 @@ public struct TextInputCell : InputCellType {
 	public let valueChanged : (String) -> Void
 	public let done : ((String) -> Void)?
 	
-	public init(id : String, title : String?, placeholder : String? = nil, enabled : Bool = true, invalid : Bool = false, secure : Bool = false, value : String, valueChanged : (String) -> Void, done : ((String) -> Void)? = nil) {
+	public init(id : String, title : String?, placeholder : String? = nil, enabled : Bool = true, invalid : Bool = false, secure : Bool = false, value : String, valueChanged : @escaping (String) -> Void, done : ((String) -> Void)? = nil) {
 		self.id = id
 		self.title = title
 		self.placeholder = placeholder

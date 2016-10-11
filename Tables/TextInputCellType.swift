@@ -51,7 +51,7 @@ public class InputCell : UITableViewCell, DeclarativeCell, UITextFieldDelegate {
 				if cellType.value != awatingText { value = cellType.value }
 				placeholder = cellType.placeholder
 				view.input.isEnabled = cellType.enabled
-				view.label.textColor = (cellType.invalid ? .red() : nil)
+				view.label.textColor = (cellType.invalid ? .red : nil)
 				view.input.isSecureTextEntry = cellType.secure
 //				view.input.returnKeyType = cellType.returnButton ?? .Default
 			}
@@ -85,7 +85,7 @@ public class InputCellView : UIStackView {
 		setup()
 	}
 	
-	public required init?(coder aDecoder : NSCoder) {
+	public required init(coder aDecoder : NSCoder) {
 		super.init(coder: aDecoder)
 		setup()
 	}
